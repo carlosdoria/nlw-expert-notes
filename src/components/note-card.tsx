@@ -4,16 +4,28 @@ import { ptBR } from "date-fns/locale";
 import { X } from "lucide-react";
 
 interface NoteCardProps {
+  id: string;
   date: Date;
   content: string;
+  handleDeleteNote: (id: string) => void;
 }
 
-export function NoteCard({ content, date }: NoteCardProps) {
+export function NoteCard({
+  content,
+  date,
+  id,
+  handleDeleteNote,
+}: NoteCardProps) {
+  const formattedDate = formatDistanceToNow(date, {
+    addSuffix: true,
+    locale: ptBR,
+  });
+
   return (
     <Dialog.Root>
       <Dialog.Trigger className="relative flex flex-col gap-3 p-5 overflow-hidden text-left rounded-md outline-none bg-slate-800 hover:ring-2 hover:ring-slate-600 focus-visible:ring-2 focus-visible:ring-lime-400">
         <span className="text-sm font-medium text-slate-300">
-          {date.toISOString()}
+          {formattedDate}
         </span>
 
         <p className="text-sm leading-6 text-slate-400">{content}</p>
@@ -23,7 +35,7 @@ export function NoteCard({ content, date }: NoteCardProps) {
 
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50" />
-        <Dialog.Content className="fixed overflow-hidden left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[640px] w-full h-[60vh] bg-slate-700 rounded-md flex flex-col outline-none">
+        <Dialog.Content className="fixed inset-0 flex w-full flex-col overflow-hidden bg-slate-700 outline-none md:inset-auto md:left-1/2 md:top-1/2 md:h-[60vh] md:max-w-[640px] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-md">
           <Dialog.Close className="absolute right-1 top-1 rounded-sm bg-slate-800 p-1.5 text-slate-400 hover:text-slate-100">
             <X className="size-5" />
           </Dialog.Close>
@@ -41,6 +53,7 @@ export function NoteCard({ content, date }: NoteCardProps) {
 
           <button
             type="button"
+            onClick={() => handleDeleteNote(id)}
             className="w-full py-4 text-sm font-medium text-center outline-none bg-slate-800 text-slate-300 group"
           >
             Deseja{" "}
